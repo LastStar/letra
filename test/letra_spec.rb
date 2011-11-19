@@ -7,6 +7,13 @@ describe Letra do
                         :destination => "output", :font_name => 'Metalista')
   end
   
+  after do
+    File.unlink("output/Metalista.otf") rescue nil
+    File.unlink("output/Metalista.woff") rescue nil
+    File.unlink("output/Metalista.svg") rescue nil
+    File.unlink("output/Metalista.eot") rescue nil
+  end
+  
   it "should check if source file exists" do
     @letra.source_file.must_equal "test/fonts/font.otf"
   end
