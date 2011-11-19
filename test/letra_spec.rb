@@ -3,11 +3,12 @@ require "./lib/letra"
 
 describe Letra do
   before do
-    @letra = Letra.load(:source_file => "test/fonts/Metalista.otf", :destination => "output")
+    @letra = Letra.load(:source_file => "test/fonts/font.otf", 
+                        :destination => "output", :font_name => 'Metalista')
   end
   
   it "should check if source file exists" do
-    @letra.source_file.must_equal "test/fonts/Metalista.otf"
+    @letra.source_file.must_equal "test/fonts/font.otf"
   end
   
   it "should return all type of webfonts" do

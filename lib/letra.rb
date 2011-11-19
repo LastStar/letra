@@ -2,13 +2,13 @@ require 'tmpdir'
 require 'fileutils'
 
 class Letra
-  attr_accessor :source_file, :tmp_dir, :destination, :file_name
+  attr_accessor :source_file, :tmp_dir, :destination, :file_name, :font_name
   
   def self.load(options)
-    raise "Source file does not exists " unless File.exists?(options[:source_file])
     letra = Letra.new
     letra.source_file = options[:source_file]
     letra.destination = options[:destination]
+    letra.font_name   = options[:font_name]
     return letra
   end
   
@@ -42,23 +42,20 @@ class Letra
   
   def clean
     FileUtils.rm_rf @tmp_dir
-    FileUtils.rm "#{destination}/#{file_name}.ttf"
+    FileUtils.rm "#{destination}/#{font_name}.ttf"
   end
   
   def copy_to_destination
     FileUtils.cp_r @tmp_dir + '/.', destination
-  end
-  
-  def file_name
-    @file_name ||= File.basename(source_file, ".otf")
+    File.rename(destination + '/' + File.basename(source_file), destination + '/' + font_name + '.otf')
   end
   
   def fontforge!
-    `fontforge -lang=ff -c 'Open($1);Generate($1:r + ".ttf");Generate($1:r + ".woff");Generate($1:r + ".svg");' #{@tmp_dir}/#{file_name}.otf 2>/dev/null`    
+    `fontforge -lang=ff -c 'Open($1);Generate("#{@tmp_dir}/#{font_name}.ttf");Generate("#{@tmp_dir}/#{font_name}.woff");Generate("#{@tmp_dir}/#{font_name}" + ".svg");' #{@tmp_dir}/#{File.basename source_file} 2>/dev/null`    
   end
   
   def make_eot_from_ttf
-    `ttf2eot #{destination}/#{file_name}.ttf > #{destination}/#{file_name}.eot`
+    `ttf2eot #{destination}/#{font_name}.ttf > #{destination}/#{font_name}.eot`
   end
   
   def fontforge_installed?
