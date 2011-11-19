@@ -43,6 +43,7 @@ class Letra
   def clean
     FileUtils.rm_rf @tmp_dir
     FileUtils.rm "#{destination}/#{font_name}.ttf"
+    FileUtils.rm "#{destination}/#{font_name}.afm" if File.exists?("#{destination}/#{font_name}.afm")
   end
   
   def copy_to_destination

@@ -16,6 +16,7 @@ describe Letra do
     files = Dir.entries(@letra.destination)
     files.include?("Metalista.otf").must_equal true
     files.include?("Metalista.ttf").must_equal false
+    files.include?("Metalista.afm").must_equal false    
     files.include?("Metalista.woff").must_equal true
     files.include?("Metalista.svg").must_equal true
     files.include?("Metalista.eot").must_equal true    
