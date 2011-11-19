@@ -20,16 +20,12 @@ class Letra
   def convert!
     create_tmp_dir
     copy_original_to_tmp_dir
-    fontforge!
+    convert_to_ttf_woff_and_svg
     copy_to_destination
     make_eot_from_ttf
     clean
   end
   
-  def destination
-    @destination ||= File.dirname source_file
-  end
-
   private
   
   def create_tmp_dir
@@ -40,24 +36,29 @@ class Letra
     FileUtils.cp source_file, @tmp_dir
   end
   
-  def clean
-    FileUtils.rm_rf @tmp_dir
-    FileUtils.rm "#{destination}/#{font_name}.ttf"
-    FileUtils.rm "#{destination}/#{font_name}.afm" if File.exists?("#{destination}/#{font_name}.afm")
-  end
+  def convert_to_ttf_woff_and_svg
+    `fontforge -lang=ff -c \
+     'Open($1); \
+     Generate("#{tmp_file_path('ttf')}"); \
+     Generate("#{tmp_file_path('woff')}"); \
+     Generate("#{tmp_file_path('svg')}");' \
+     #{File.join(@tmp_dir, File.basename(source_file))} 2>/dev/null`    
+  end  
   
   def copy_to_destination
     FileUtils.cp_r @tmp_dir + '/.', destination
-    File.rename(destination + '/' + File.basename(source_file), destination + '/' + font_name + '.otf')
+    File.rename(File.join(destination, File.basename(source_file)), font_file_path('otf'))
   end
-  
-  def fontforge!
-    `fontforge -lang=ff -c 'Open($1);Generate("#{@tmp_dir}/#{font_name}.ttf");Generate("#{@tmp_dir}/#{font_name}.woff");Generate("#{@tmp_dir}/#{font_name}" + ".svg");' #{@tmp_dir}/#{File.basename source_file} 2>/dev/null`    
-  end
-  
+
   def make_eot_from_ttf
-    `ttf2eot #{destination}/#{font_name}.ttf > #{destination}/#{font_name}.eot`
+    `ttf2eot #{font_file_path('ttf')}> #{font_file_path('eot')}`
   end
+  
+  def clean
+    FileUtils.rm_rf @tmp_dir
+    FileUtils.rm font_file_path('ttf')
+    FileUtils.rm font_file_path('afm') if File.exists?(font_file_path('afm'))
+  end  
   
   def fontforge_installed?
     is_in_path?('fontforge')
@@ -68,6 +69,18 @@ class Letra
   end
   
   def is_in_path?(file)
-    ENV["PATH"].split(':').any? {|dir| File.exist? dir + "/#{file}"}
+    ENV["PATH"].split(':').any? {|dir| File.exist? File.join(dir, file)}
+  end
+  
+  def tmp_file_path(extension = nil)
+    File.join(@tmp_dir, font_file_name(extension))
+  end
+  
+  def font_file_path(extension = nil)
+    File.join(destination, font_file_name(extension))
+  end
+  
+  def font_file_name(extension = nil)
+    [font_name, extension].compact.join('.')
   end
 end
