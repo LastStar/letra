@@ -9,6 +9,7 @@ Requires the fontforge, ttf2eot in path.
 Example
 -------
 1 - Config letra and convert
+
     @letra = Letra.load(:source_file => "test/fonts/font.otf", 
                         :destination => "output", :font_name => 'Metalista')
     @letra.convert!                        
