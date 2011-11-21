@@ -3,7 +3,7 @@
 Gem::Specification.new do |s|
   s.platform          = Gem::Platform::RUBY
   s.name              = %q{letra}
-  s.version           = '0.1'
+  s.version           = '0.2'
   s.description       = %q{Convert fonts}
   s.summary           = %q{Built for easy webfonts converting}
   s.email             = %q{retro@ballgag.cz}
