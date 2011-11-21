@@ -1,5 +1,6 @@
 require 'tmpdir'
 require 'fileutils'
+require './lib/letra/enc_parser'
 
 class Letra
   attr_accessor :source_file, :tmp_dir, :destination, :file_name, :font_name

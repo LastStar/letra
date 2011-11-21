@@ -1,0 +1,11 @@
+require 'minitest/autorun'
+require "./lib/letra"
+
+describe Letra::EncParser do
+  it "should return well parsed ruby array" do
+    array = Letra::EncParser.parse(IO.read("test/fixtures/corpulent.enc"))
+    array.first.must_equal 1
+    array.last.must_equal 382
+  end
+end
+
