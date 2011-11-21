@@ -77,7 +77,7 @@ class Letra
     FileUtils.rm_rf @tmp_dir
     FileUtils.rm font_file_path('ttf')
     FileUtils.rm font_file_path('afm') if File.exists?(font_file_path('afm'))
-    # FileUtils.rm '/tmp/reduce.pe' rescue nil
+    FileUtils.rm '/tmp/reduce.pe' rescue nil
   end  
   
   def fontforge_installed?
