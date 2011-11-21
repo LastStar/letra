@@ -78,6 +78,7 @@ class Letra
     FileUtils.rm font_file_path('ttf')
     FileUtils.rm font_file_path('afm') if File.exists?(font_file_path('afm'))
     FileUtils.rm '/tmp/reduce.pe' rescue nil
+    File.delete(File.join(destination, File.basename(source_file, File.extname(source_file)) + '.afm')) rescue nil
   end  
   
   def fontforge_installed?
