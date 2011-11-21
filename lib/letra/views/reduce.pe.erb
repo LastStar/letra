@@ -1,0 +1,8 @@
+Open($1);
+<% selected_glyph_ids.each do |selected_glyph_id| %>
+SelectMore(<%= selected_glyph_id %>);
+<% end %>
+SelectInvert();
+Clear();
+Reencode("compacted");
+Generate($1);

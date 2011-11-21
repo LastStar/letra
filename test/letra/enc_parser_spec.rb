@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require "./lib/letra"
+require File.expand_path('../spec_helper', File.dirname(__FILE__))
 
 describe Letra::EncParser do
   it "should return well parsed ruby array" do

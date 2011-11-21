@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require "./lib/letra"
+require File.expand_path('spec_helper', File.dirname(__FILE__))
 
 describe Letra do
   before do
@@ -27,5 +26,16 @@ describe Letra do
     files.include?("Metalista.woff").must_equal true
     files.include?("Metalista.svg").must_equal true
     files.include?("Metalista.eot").must_equal true    
+    
+    File.size("output/Metalista.otf").must_equal 26716
+  end
+  
+  it "should return reduces webfonts" do
+    letra = Letra.load(:source_file => "test/fixtures/font.otf",
+                       :glyph_indices => "test/fixtures/corpulent.enc",
+                       :destination => "output", :font_name => 'Metalista')
+    letra.convert!     
+    
+    File.size("output/Metalista.otf").must_equal 15852
   end
 end
