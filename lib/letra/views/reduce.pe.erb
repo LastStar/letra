@@ -4,5 +4,8 @@ SelectMore(<%= selected_glyph_id %>);
 <% end %>
 SelectInvert();
 Clear();
+<% removed_features.each do |removed_feature| %>
+RemoveLookup("<%= removed_feature %>");
+<% end %>
 Reencode("compacted");
 Generate($1);
