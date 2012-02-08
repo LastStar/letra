@@ -9,7 +9,7 @@ require 'erb'
 class Letra
   attr_accessor :source_file, :tmp_dir, :destination, :file_name,
                 :font_name, :selected_glyphs, :script_file,
-                :export_to
+                :export_to, :without
 
   def self.load(options)
     letra = Letra.new
@@ -18,12 +18,18 @@ class Letra
     letra.font_name   = options[:font_name]
     letra.export_to   = options[:export_to]
     letra.selected_glyphs = options[:glyph_indices] if options[:glyph_indices]
+    letra.without     = options[:without]
     return letra
   end
 
   def initialize
     raise "Fontforge is not in PATH" unless fontforge_installed?
     raise "TTF2EOT is not in PATH"   unless ttf2eot_installed?
+    @features = {:kerning => "'kern' Horizontal Kerning in Latin lookup 0",
+                 :small_caps => 'smcp',
+                 :all_small_caps => 'c2sc',
+                 :ligatures => 'liga',
+                 :slashed_zero => 'zero'}
   end
 
   def convert!
@@ -35,8 +41,9 @@ class Letra
       copy_to_destination
       make_eot_from_ttf
       true
-    rescue
+    rescue Exception => e
       false
+      p e.backtrace
     ensure
       clean
     end
@@ -53,11 +60,8 @@ class Letra
   end
 
   def select_glyphs
-    if self.selected_glyphs.is_a?(String)
-      self.selected_glyphs = EncParser.parse(IO.read(self.selected_glyphs))
-    elsif self.selected_glyphs.is_a?(Hash)
-      self.selected_glyphs = EncBuilder.build_enc(self.selected_glyphs)
-    end
+    selected_glyphs = load_selected_glyph_ids()
+    removed_features = load_removed_features()
     template = ERB.new(IO.read(File.expand_path('letra/views/reduce.pe.erb', File.dirname(__FILE__))))
     File.open('/tmp/reduce.pe',  'wb') {|f| f.write(template.result(binding)) }
     `fontforge -lang=ff -script /tmp/reduce.pe #{tmp_original_file_path} 2>/dev/null`
@@ -89,7 +93,7 @@ class Letra
     FileUtils.rm font_file_path('svg') unless  export_to.include?(:svg)
     FileUtils.rm font_file_path('otf') unless  export_to.include?(:otf)
     FileUtils.rm font_file_path('afm') if File.exists?(font_file_path('afm'))
-    FileUtils.rm '/tmp/reduce.pe' rescue nil
+    #FileUtils.rm '/tmp/reduce.pe' rescue nil
     File.delete(File.join(destination, File.basename(source_file, File.extname(source_file)) + '.afm')) rescue nil
   end
 
@@ -119,5 +123,21 @@ class Letra
 
   def tmp_original_file_path
     File.join(@tmp_dir, File.basename(source_file))
+  end
+
+  def load_selected_glyph_ids
+    if self.selected_glyphs.is_a?(String)
+      return EncParser.parse(IO.read(self.selected_glyphs))
+    elsif self.selected_glyphs.is_a?(Hash)
+      return EncBuilder.build_enc(self.selected_glyphs)
+    end
+  end
+
+  def load_removed_features
+    if self.without
+      @features.select{|k,v| self.without.include?(k)}.values
+    else
+      []
+    end
   end
 end

@@ -81,11 +81,24 @@ describe Letra do
     letra = Letra.load(:source_file => "test/fixtures/font.otf",
                        :glyph_indices => {:languages => ['Czech', 'Slovak'], :custom_characters => '☃û'},
                        :destination => "output", :font_name => 'Metalista',
-                       :export_to => [:woff, :svg, :eot])
+                       :export_to => [:woff, :svg, :eot, :otf])
     letra.convert!
 
     File.size("output/Metalista.woff").must_equal 5352
     File.size("output/Metalista.svg").must_equal 26842
     File.size("output/Metalista.eot").must_equal 13388
+    File.size("output/Metalista.otf").must_equal 9656
+  end
+
+  it "should return reduced webfonts with Czech and Slovak glyphs and custom char without opentype features" do
+    letra = Letra.load(:source_file => "test/fixtures/font.otf",
+                       :glyph_indices => {:languages => ['Czech', 'Slovak'], :custom_characters => '☃û'},
+                       :destination => "output", :font_name => 'Metalista',
+                       :export_to => [:woff, :svg, :eot, :otf], :without => [:kerning])
+    letra.convert!
+    File.size("output/Metalista.woff").must_equal 5116
+    File.size("output/Metalista.svg").must_equal 25308
+    File.size("output/Metalista.eot").must_equal 13048
+    File.size("output/Metalista.otf").must_equal 9336
   end
 end
