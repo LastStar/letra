@@ -1,4 +1,40 @@
 Open($1);
+
+<% if !!suffix_for_numbers %>
+SelectNone();
+cnt=CharCnt()
+i=j=0
+basic_zero_position=48
+suffix="<%= suffix_for_numbers %>"
+numbers=Array(10)
+while ( i<cnt )
+  Select(i);
+  name=GlyphInfo("Name")
+  if ( Strstr(name, suffix) != -1)
+    if ( (Strstr(name, "zero") != -1) || (Strstr(name, "one") != -1) || (Strstr(name, "two") != -1) || (Strstr(name, "three") != -1) || (Strstr(name, "four") != -1) || (Strstr(name, "five") != -1) || (Strstr(name, "six") != -1) || (Strstr(name, "seven") != -1) || (Strstr(name, "eight") != -1) || (Strstr(name, "nine") != -1))
+      Print(GlyphInfo("Name"));
+      # Print(i);
+      numbers[j] = i;
+      ++j;
+    endif
+  endif
+  ++i;
+endloop
+
+SelectNone();
+
+i=0
+while ( i<SizeOf(numbers) )
+  Print(numbers[i]);
+  Select(numbers[i]);
+  Copy();
+  Select(basic_zero_position+i);
+  Paste();
+  ++i;
+endloop
+SelectNone();
+<% end %>
+
 <% selected_glyphs.each do |selected_glyph_id| %>
 SelectMore(<%= selected_glyph_id %>);
 <% end %>

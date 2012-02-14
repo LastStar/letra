@@ -9,7 +9,7 @@ require 'erb'
 class Letra
   attr_accessor :source_file, :tmp_dir, :destination, :file_name,
                 :font_name, :selected_glyphs, :script_file,
-                :export_to, :without
+                :export_to, :without, :suffix_for_numbers
 
   def self.load(options)
     letra = Letra.new
@@ -19,6 +19,7 @@ class Letra
     letra.export_to   = options[:export_to]
     letra.selected_glyphs = options[:glyph_indices] if options[:glyph_indices]
     letra.without     = options[:without]
+    letra.suffix_for_numbers = options[:suffix_for_numbers]
     return letra
   end
 
