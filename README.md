@@ -34,7 +34,7 @@ Example
 ```
 3 - Suprise in output directory
 
-Impleneted OpenType features
+Implemeted OpenType features
 ----------------------------
 You can remove this opentype features:
 
