@@ -42,9 +42,6 @@ class Letra
       copy_to_destination
       make_eot_from_ttf
       true
-    rescue Exception => e
-      false
-      p e.backtrace
     ensure
       clean
     end
@@ -88,11 +85,11 @@ class Letra
 
   def clean
     FileUtils.rm_rf @tmp_dir
-    FileUtils.rm font_file_path('ttf') unless  export_to.include?(:ttf)
-    FileUtils.rm font_file_path('eot') unless  export_to.include?(:eot)
-    FileUtils.rm font_file_path('woff') unless export_to.include?(:woff)
-    FileUtils.rm font_file_path('svg') unless  export_to.include?(:svg)
-    FileUtils.rm font_file_path('otf') unless  export_to.include?(:otf)
+    FileUtils.rm font_file_path('ttf') unless  export_to.include?(:ttf) rescue nil
+    FileUtils.rm font_file_path('eot') unless  export_to.include?(:eot) rescue nil
+    FileUtils.rm font_file_path('woff') unless export_to.include?(:woff) rescue nil
+    FileUtils.rm font_file_path('svg') unless  export_to.include?(:svg) rescue nil
+    FileUtils.rm font_file_path('otf') unless  export_to.include?(:otf) rescue nil
     FileUtils.rm font_file_path('afm') if File.exists?(font_file_path('afm'))
     #FileUtils.rm '/tmp/reduce.pe' rescue nil
     File.delete(File.join(destination, File.basename(source_file, File.extname(source_file)) + '.afm')) rescue nil

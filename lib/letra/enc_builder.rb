@@ -1,7 +1,7 @@
 class Letra
   class EncBuilder
     def self.build_enc(options)
-      languages = options[:languages].push('Basic set')
+      languages = Array(options[:languages]).push('Basic set')
       custom    = options[:custom_characters]
       languages_path = File.expand_path('../../encs/languages', File.dirname(__FILE__))
 
