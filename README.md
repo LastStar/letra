@@ -72,14 +72,9 @@ Example
 ```
 3 - Suprise in output directory
 
-Impleneted OpenType features
+Looking for font lookups
 ----------------------------
-You can remove this opentype features:
 
 ``` ruby
-@features = {:kerning => "'kern' Horizontal Kerning in Latin lookup 0",
-             :small_caps => "'smcp' Lowercase to Small Capitals lookup 9",
-             :all_small_caps => "'c2sc' Capitals to Small Capitals lookup 6",
-             :ligatures => "'liga' Standard Ligatures lookup 34",
-             :slashed_zero => "'zero' Slashed Zero lookup 38"}
+Letra::Lookups.for('test/fixtures/font.otf') #=> {'aalt' => 'Access All Alternates in Latin'}
 ```                 
