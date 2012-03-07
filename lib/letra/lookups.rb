@@ -25,9 +25,9 @@ class Letra
 
     def find_lookups_in(file)
       raw = file.read
-      data = raw.scan /(?<tag>'....') (?<name>.*) lookup /
+      data = raw.scan /'(?<tag>....)' (?<name>.*) lookup /
       data.each do |d|
-        self.lookups[d[0].delete("'")] = d[1]
+        self.lookups[d[0]] = d[1]
       end
     end
   end
