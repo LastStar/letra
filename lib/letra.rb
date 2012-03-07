@@ -26,11 +26,11 @@ class Letra
   def initialize
     raise "Fontforge is not in PATH" unless fontforge_installed?
     raise "TTF2EOT is not in PATH"   unless ttf2eot_installed?
-    @features = {:kerning => "'kern' Horizontal Kerning in Latin lookup 0",
-                 :small_caps => "'smcp' Lowercase to Small Capitals lookup 9",
-                 :all_small_caps => "'c2sc' Capitals to Small Capitals lookup 6",
-                 :ligatures => "'liga' Standard Ligatures lookup 34",
-                 :slashed_zero => "'zero' Slashed Zero lookup 38"}
+    @features = {:kerning => "kern",
+                 :small_caps => "smcp",
+                 :all_small_caps => "c2sc",
+                 :ligatures => "liga",
+                 :slashed_zero => "zero"}
   end
 
   def convert!

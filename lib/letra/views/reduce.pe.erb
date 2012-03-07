@@ -40,8 +40,34 @@ SelectMore(<%= selected_glyph_id %>);
 <% end %>
 SelectInvert();
 Clear();
-<% removed_features.each do |removed_feature| %>
-RemoveLookup("<%= removed_feature %>");
+
+<% if removed_features.any? %>
+tables = Array(2);
+tables[0] = "GPOS";
+tables[1] = "GSUB";
+
+FeaturesToRemove = Array(<%= removed_features.count %>);
+<% removed_features.each_with_index do |feature, index| %>
+  FeaturesToRemove[<%= index %>] = "<%= feature %>";
 <% end %>
+
+i = 0;
+while(i<SizeOf(tables))
+  lookups = GetLookups(tables[i]);
+  j = 0;
+  while(j<SizeOf(lookups))
+    k = 0;
+    while(k<SizeOf(FeaturesToRemove))
+      if(Strstr(lookups[j], FeaturesToRemove[k]) != -1)
+        RemoveLookup(lookups[j]);
+      endif
+      ++k;
+    endloop
+    ++j;
+  endloop
+  ++i;
+endloop
+<% end %>
+
 Reencode("compacted");
 Generate($1);
