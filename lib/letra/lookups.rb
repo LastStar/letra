@@ -2,7 +2,7 @@ class Letra
   class Lookups
     attr_accessor :font, :lookups
     def self.for(font)
-      Letra::Lookups.new(font).to_h
+      Letra::Lookups.new(font).load
     end
 
     def initialize(font)
@@ -10,7 +10,7 @@ class Letra
       self.lookups = {}
     end
 
-    def to_h
+    def load
       script = File.expand_path('views/lookups.pe', File.dirname(__FILE__))
       file = Tempfile.new('lookups')
       begin
