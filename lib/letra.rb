@@ -4,6 +4,7 @@ require 'tempfile'
 require 'fileutils'
 require 'letra/enc_parser'
 require 'letra/enc_builder'
+require 'letra/lookups'
 require 'erb'
 
 class Letra
