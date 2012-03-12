@@ -1,6 +1,0 @@
-.bundle/*
-Gemfile.lock
-output/*.eot
-output/*.otf
-output/*.svg
-output/*.woff
