@@ -29,7 +29,7 @@ end
 # Start python and load fontforge with font
 RubyPython.start
 fontforge = RubyPython.import('fontforge')
-font = fontforge.open('test/font/font.otf')
+font = fontforge.open('test/fonts/font.otf')
 
 # Start session
 IRB.start_session(binding)

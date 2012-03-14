@@ -13,6 +13,10 @@ class Letra
     @name = File.basename(fontfile, File.extname(fontfile))
   end
 
+  def close
+    @font.close
+  end
+
   def lookups
     lookups_hash ||= load_lookups
   end
@@ -22,11 +26,44 @@ class Letra
   end
 
   def generate!(formats)
-    formats = Array(formats)
+    formats = Array(formats).collect(&:to_s).sort.reverse
     raise "Invalid output format" if invalid_formats?(formats)
-    formats.each do |format|
-      @font.generate(generated_font_file(format)) if format.to_s != 'eot'
-      Reot.convert!(fontfile, generated_font_file('eot')) if format.to_s == 'eot'
+    formats.select {|f| f != 'eot'}.each do |format|
+      @font.generate(generated_font_file(format))
+    end
+    if formats.include?('eot')
+      ttf = formats.include?('ttf')
+      @font.generate(generated_font_file('ttf')) unless ttf
+      Reot.convert!(generated_font_file('ttf'), generated_font_file('eot'))
+      File.delete(generated_font_file('ttf')) unless ttf
+    end
+  end
+
+  def glyphs_count
+    @font.glyphs().to_enum.count
+  end
+
+  def reduce!(characters)
+    font.selection.none()
+    characters.each_char do |character|
+      font.selection.select(["more", nil], character)
+    end
+    font.selection.invert()
+    font.clear()
+    font.encoding = "compacted"
+  end
+
+  def apply_substitution(lookup)
+    @font.glyphs().to_enum.each do |glyph|
+      substitutions = glyph.getPosSub("*").rubify
+      sub = substitutions.select {|s| s[0].include?(lookup) and s[1].include?("Substitution")}.flatten
+      if sub.any?
+        target = sub.flatten.last
+        @font.selection.select(target)
+        @font.copy()
+        @font.selection.select(glyph.glyphname)
+        @font.paste()
+      end
     end
   end
 
@@ -35,13 +72,13 @@ class Letra
     @lookups_hash = {}
     @font.gsub_lookups.rubify.collect do |lookup|
       lookup = lookup.scan(/'(?<tag>....)' (?<name>.*) lookup /).flatten
-      @lookups_hash[lookup[0]] = lookup[1]
+      @lookups_hash[lookup[0]] = lookup[1] if lookup[0]
     end
     @lookups_hash
   end
 
   def invalid_formats?(formats)
-    formats.select{|f| f.to_s.scan(/otf|ttf|eot|svg/).any?}.count != formats.count
+    formats.select{|f| f.to_s.scan(/otf|ttf|woff|eot|svg/).any?}.count != formats.count
   end
 
   def generated_font_file(extension)

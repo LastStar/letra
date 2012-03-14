@@ -12,8 +12,13 @@ class TestLetraLookups < Letra::TestCase
   end
 
   def test_font_without_kerning
-    font = 'test/font/font_without_kerning.otf'
+    font = 'test/fonts/font_without_kerning.otf'
     letra = Letra.new(font)
     assert !letra.kerning?
+  end
+
+  def test_apply_substitution
+    letra.apply_substitution('aalt')
+    assert_rendered_text('.', 'test/images/dot.png')
   end
 end
