@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Josef Šimánek"]
   s.email       = ["retro@ballgag.cz"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Simple Fontforge Python wrapper for Ruby}
+  s.description = %q{Just few operations yet}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
