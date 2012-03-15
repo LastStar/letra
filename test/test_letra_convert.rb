@@ -7,10 +7,11 @@ class TestLetraConvert < Letra::TestCase
   end
 
   def test_generate_all_formats
-    letra.generate!([:ttf, :otf, :svg, :eot, :woff])
+    letra.generate!([:ttf, :otf, :svg, :svgz, :eot, :woff])
     assert_generated_file_format('ttf')
     assert_generated_file_format('otf')
     assert_generated_file_format('svg')
+    assert_generated_file_format('svgz')
     assert_generated_file_format('woff')
     assert_generated_file_format('eot', false)
   end
@@ -19,6 +20,12 @@ class TestLetraConvert < Letra::TestCase
     letra.generate!(:eot)
     assert_generated_file_format('eot', false)
     assert_not_generated_file_format('ttf')
+  end
+
+  def test_generate_svgz
+    letra.generate!(:svgz)
+    assert_generated_file_format('svgz')
+    assert_not_generated_file_format('svg')
   end
 
   def test_generate_unknown_format

@@ -5,6 +5,12 @@ class Letra
   attr_reader :font, :fontforge, :fontfile
   attr_accessor :destination, :name
 
+  def self.open(fontfile, &block)
+    letra = Letra.new(fontfile)
+    yield(letra)
+    letra.close
+  end
+
   def initialize(fontfile)
     RubyPython.start
     @fontforge = RubyPython.import('fontforge')
