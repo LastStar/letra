@@ -31,6 +31,11 @@ class Letra
     @kerning ||= @font.gpos_lookups.rubify.to_s.include?('kern')
   end
 
+  def remove_kerning!
+    kerning_tables = @font.gpos_lookups.rubify.select{|table| table.include?('kern')}
+    kerning_tables.each{|table| @font.removeLookup(table)}
+  end
+
   def generate!(formats)
     formats = Array(formats).collect(&:to_s).sort.reverse
     raise "Invalid output format" if invalid_formats?(formats)

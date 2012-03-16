@@ -11,6 +11,11 @@ class TestLetraLookups < Letra::TestCase
     assert letra.kerning?
   end
 
+  def test_font_delete_kerning
+    letra.remove_kerning!
+    refute letra.kerning?
+  end
+
   def test_font_without_kerning
     font = 'test/fonts/font_without_kerning.otf'
     letra = Letra.new(font)
