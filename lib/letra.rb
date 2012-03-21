@@ -21,6 +21,9 @@ class Letra
 
   def close
     @font.close
+    @fontforge = nil
+    @font = nil
+    @name = nil
   end
 
   def lookups
@@ -57,7 +60,7 @@ class Letra
   def reduce!(characters)
     font.selection.none()
     characters.each_char do |character|
-      font.selection.select(["more", nil], character)
+      font.selection.select(["more", nil], character.ord)
     end
     font.selection.invert()
     font.clear()
