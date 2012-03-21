@@ -22,4 +22,17 @@ class TestLetraReduce < Letra::TestCase
     letra.reduce!(basic_set)
     assert_equal 116, letra.glyphs_count
   end
+
+  def test_reduce_to_czech_set
+    basic_set = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&@€$¢£¥?!¿¡§%‰*†'\"“”‘’‹›«»#(/)[\]{|}-–—_.,:;©®™ªº^+-×=<>•"
+    czech_set = "ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž"
+    letra.reduce!(czech_set + basic_set)
+    assert_equal 146, letra.glyphs_count
+  end
+
+  def test_multiple_reduces
+    letra.reduce!('0123456789')
+    letra.reduce!('01234')
+    assert_equal 5, letra.glyphs_count
+  end
 end

@@ -64,7 +64,7 @@ class Letra
     end
     font.selection.invert()
     font.clear()
-    font.encoding = "compacted"
+    # font.encoding = "compacted"
   end
 
   def apply_substitution(lookup)
