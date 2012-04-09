@@ -30,31 +30,10 @@ class Letra::TestCase < MiniTest::Unit::TestCase
     filepath = generated_font_path(extension)
     assert File.exists?(filepath), "#{filepath} doesn't exists"
     assert File.size(filepath) > 0, "#{filepath} is empty"
-    assert_file_is_valid_font(filepath) if test_with_fontforge
   end
 
   def assert_not_generated_file_format(extension)
     filepath = generated_font_path(extension)
     assert !File.exists?(filepath), "#{filepath} exists, but should not!"
-  end
-
-  def assert_file_is_valid_font(filepath)
-    fontforge = RubyPython.import('fontforge')
-    value = fontforge.open(filepath) rescue false
-    assert value, "#{filepath} is not valid font"
-  end
-
-  def assert_rendered_text(text, image)
-    letra.generate!(:otf)
-    renderer = Glyphr::Renderer.new(generated_font_path('otf'), 72)
-    renderer.image_width = 150
-    renderer.render(text)
-    generated_image = File.join(self.dir, 'output.png')
-    renderer.image.save(generated_image)
-    assert_files(generated_image, image)
-  end
-
-  def assert_files(file1, file2)
-    assert FileUtils.compare_file(file1, file2), "Files #{file1} and #{file2} are not same."
   end
 end

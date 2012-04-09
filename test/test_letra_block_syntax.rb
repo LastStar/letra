@@ -13,12 +13,15 @@ class TestLetraBlockSyntax < Letra::TestCase
   def test_letra_block_syntax
     Letra.open('test/fonts/font.otf') do |font|
       font.destination = self.dir
-      font.apply_substitution('aalt')
-      font.reduce!('abcde.')
-      font.generate!(:woff)
+      font.remove_kerning = true
+      font.apply_substitutions = ['aalt']
+      font.reduce = 'abcde.'
+      font.formats = [:woff, :eot]
+      font.name = 'superfont'
     end
 
-    self.letra = Letra.new(File.join(dir, "font.woff"))
-    assert_equal 7, letra.glyphs_count
+    assert File.exists?(File.join(self.dir, 'superfont.woff'))
+    assert File.exists?(File.join(self.dir, 'superfont.eot'))
+    refute File.exists?(File.join(self.dir, 'superfont.ttf'))
   end
 end
