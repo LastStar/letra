@@ -13,9 +13,11 @@ class Letra
 
   def initialize(fontfile)
     RubyPython.start
+    RubyPython.import('sys').path.append(File.dirname(__FILE__))
     @fontforge = RubyPython.import('fontforge')
+    @pytra = RubyPython.import('pytra')
     @fontfile = fontfile
-    @font = fontforge.open(fontfile)
+    @font = fontforge.open(RubyPython::Conversion.rtopString(fontfile))
     @name = File.basename(fontfile, File.extname(fontfile))
   end
 
@@ -54,7 +56,7 @@ class Letra
   end
 
   def glyphs_count
-    @font.glyphs().to_enum.count
+    RubyPython::Conversion.ptorInt(@pytra.glyphs_count(@font).pObject.pointer)
   end
 
   def reduce!(characters)
@@ -68,26 +70,18 @@ class Letra
   end
 
   def apply_substitution(lookup)
-    @font.glyphs().to_enum.each do |glyph|
-      substitutions = glyph.getPosSub("*").rubify
-      sub = substitutions.select {|s| s[0].include?(lookup) and s[1].include?("Substitution")}.flatten
-      if sub.any?
-        target = sub.flatten.last
-        @font.selection.select(target)
-        @font.copy()
-        @font.selection.select(glyph.glyphname)
-        @font.paste()
-      end
-    end
+    @pytra.apply_substitution(@font, lookup).rubify
+    true
   end
 
   private
   def load_lookups
     @lookups_hash = {}
-    @font.gsub_lookups.rubify.collect do |lookup|
-      lookup = lookup.scan(/'(?<tag>....)' (?<name>.*) lookup /).flatten
-      @lookups_hash[lookup[0]] = lookup[1] if lookup[0]
-    end
+    lookups = RubyPython::Conversion.ptorTuple(@pytra.gsub_lookups(@font).pObject.pointer)
+    lookups.collect do |lookup|
+       lookup = lookup.scan(/'(?<tag>....)' (?<name>.*) lookup /).flatten
+       @lookups_hash[lookup[0]] = lookup[1] if lookup[0]
+     end
     @lookups_hash
   end
 

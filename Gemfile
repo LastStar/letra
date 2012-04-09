@@ -6,3 +6,4 @@ gemspec
 gem 'ft2-ruby', :git => 'https://github.com/LastStar/ft2-ruby.git'
 gem 'glyphr', :git => 'git://github.com/simi/glyphr.git'
 
+# gem 'debugger'
