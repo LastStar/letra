@@ -15,13 +15,6 @@ args = parser.parse_args()
 
 font = fontforge.open(args.source)
 
-if args.keep_only:
-  font.selection.none()
-  for character in args.keep_only.decode('utf-8'):
-    font.selection.select(("more", ), ord(character))
-  font.selection.invert()
-  font.clear()
-
 for lookup in args.subs:
   glyphs = tuple(font.glyphs())
   for glyph in glyphs:
@@ -32,6 +25,13 @@ for lookup in args.subs:
         font.copy()
         font.selection.select(glyph.glyphname)
         font.paste()
+
+if args.keep_only:
+  font.selection.none()
+  for character in args.keep_only.decode('utf-8'):
+    font.selection.select(("more", ), ord(character))
+  font.selection.invert()
+  font.clear()
 
 if args.remove_kerning:
   for lookup in font.gpos_lookups:
