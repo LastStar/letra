@@ -1,5 +1,5 @@
 require 'reot'
-require 'ostruct'
+require 'shellwords'
 
 class Letra
   attr_accessor :destination, :fontfile, :name, :remove_kerning,
@@ -21,6 +21,8 @@ class Letra
     delete_ttf = !self.formats.include?(:ttf)
     self.formats << :ttf if self.eot
     self.formats.uniq!
+
+    self.reduce =  Shellwords.escape(self.reduce) if self.reduce
 
     cmd = "python #{pytra_file}"
     cmd << " --remove-kerning" if self.remove_kerning

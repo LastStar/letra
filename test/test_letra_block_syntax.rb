@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'helper'
 
 class TestLetraBlockSyntax < Letra::TestCase
@@ -15,7 +16,7 @@ class TestLetraBlockSyntax < Letra::TestCase
       font.destination = self.dir
       font.remove_kerning = true
       font.apply_substitutions = ['aalt']
-      font.reduce = 'abcde.'
+      font.reduce = 'abcde.!č$?'
       font.formats = [:woff, :eot]
       font.name = 'superfont'
     end
