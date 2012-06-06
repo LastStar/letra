@@ -19,6 +19,10 @@ class TestLetraBlockSyntax < Letra::TestCase
       font.reduce = 'abcde.!č$?'
       font.formats = [:woff, :eot]
       font.name = 'superfont'
+      font.family = 'superfamily'
+      font.subtype = 'normal'
+      font.unique = 'Unique ID'
+      font.copyright = 'Copy'
     end
 
     assert File.exists?(File.join(self.dir, 'superfont.woff'))
@@ -31,6 +35,10 @@ class TestLetraBlockSyntax < Letra::TestCase
       font.destination = self.dir
       font.formats = [:woff, :eot, :ttf]
       font.name = 'superfont'
+      font.family = 'superfamily'
+      font.subtype = 'normal'
+      font.unique = 'Unique ID'
+      font.copyright = 'Copy'
     end
 
     assert File.exists?(File.join(self.dir, 'superfont.woff'))

@@ -3,7 +3,8 @@ require 'shellwords'
 
 class Letra
   attr_accessor :destination, :fontfile, :name, :remove_kerning,
-                :apply_substitutions, :reduce, :formats, :eot
+                :apply_substitutions, :reduce, :formats, :eot,
+                :family, :subtype, :unique, :copyright
 
   def self.open(fontfile, &block)
     letra = Letra.new(fontfile)
@@ -32,6 +33,10 @@ class Letra
     cmd << " --source #{self.fontfile}"
     cmd << " --destination #{self.destination}"
     cmd << " --name #{self.name}"
+    cmd << " --family #{self.family}"
+    cmd << " --subtype #{self.subtype}"
+    cmd << " --unique '#{self.unique}'"
+    cmd << " --copyright '#{self.copyright}'"
 
     `#{cmd}`
     if self.eot

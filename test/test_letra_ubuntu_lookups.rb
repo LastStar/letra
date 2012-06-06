@@ -17,6 +17,10 @@ class TestLetraUbuntuLookups < Letra::TestCase
       font.apply_substitutions = ['case']
       font.formats = [:otf]
       font.name = 'superfont'
+      font.family = 'superfamily'
+      font.subtype = 'normal'
+      font.unique = 'Unique ID'
+      font.copyright = 'Copy'
     end
 
     assert_rendered_text(generated_font_path('superfont', 'otf'),
@@ -29,6 +33,10 @@ class TestLetraUbuntuLookups < Letra::TestCase
       font.apply_substitutions = ['case', 'numr']
       font.formats = [:otf]
       font.name = 'superfont'
+      font.family = 'superfamily'
+      font.subtype = 'normal'
+      font.unique = 'Unique ID'
+      font.copyright = 'Copy'
     end
 
     assert_rendered_text(generated_font_path('superfont', 'otf'),
