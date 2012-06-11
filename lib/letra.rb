@@ -38,10 +38,13 @@ class Letra
     cmd << " --unique '#{self.unique}'"
     cmd << " --copyright '#{self.copyright}'"
 
-    `#{cmd}`
-    if self.eot
-      Reot.convert!(generated_font_file('ttf'), generated_font_file('eot'))
-      File.delete(generated_font_file('ttf')) if delete_ttf
+    if system(cmd)
+      if self.eot
+        Reot.convert!(generated_font_file('ttf'), generated_font_file('eot'))
+        File.delete(generated_font_file('ttf')) if delete_ttf
+      end
+    else
+      raise "Pytra failed"
     end
   end
 

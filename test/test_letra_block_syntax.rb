@@ -11,6 +11,19 @@ class TestLetraBlockSyntax < Letra::TestCase
     FileUtils.remove_entry_secure self.dir
   end
 
+  def test_pytra_down
+    assert_raises(RuntimeError) {
+      Letra.open('test/fonts/font.otf') do |font|
+        font.destination = self.dir
+        font.formats = [:woff, :eot, :ttf]
+        font.family = 'superfamily'
+        font.subtype = 'normal'
+        font.unique = 'Unique ID'
+        font.copyright = 'Copy'
+      end
+    }
+  end
+
   def test_letra_block_syntax_with_all
     Letra.open('test/fonts/font.otf') do |font|
       font.destination = self.dir
