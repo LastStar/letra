@@ -45,7 +45,9 @@ if args.remove_kerning:
 
 font.sfnt_names = ()
 
-font.appendSFNTName('English (US)', 'Copyright', args.copyright)
+# Copyright is causing MAC and IE9 problems :(
+# font.appendSFNTName('English (US)', 'Copyright', args.copyright)
+
 font.appendSFNTName('English (US)', 'Family', args.family)
 font.appendSFNTName('English (US)', 'SubFamily', args.subtype)
 font.appendSFNTName('English (US)', 'UniqueID', args.unique)
