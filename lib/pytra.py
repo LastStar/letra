@@ -13,7 +13,6 @@ parser.add_argument('--name', '-N', required=True, help='font name')
 parser.add_argument('--family', '-A', required=True, help='font family')
 parser.add_argument('--subtype', '-Y', required=True, help='font type')
 parser.add_argument('--unique', '-U', required=True, help='Unique ID')
-parser.add_argument('--copyright', '-C', required=True, help='copyright')
 
 args = parser.parse_args()
 
@@ -42,22 +41,32 @@ if args.remove_kerning:
     if lookup.find("kern"):
       font.removeLookup(lookup)
 
+# from https://gitorious.org/suruma/suruma/blobs/master/generate.py
+font.selection.all()
+font.autoHint()
 
-font.sfnt_names = ()
-
-# Copyright is causing MAC and IE9 problems :(
-# font.appendSFNTName('English (US)', 'Copyright', args.copyright)
-
-font.appendSFNTName('English (US)', 'Family', args.family)
-font.appendSFNTName('English (US)', 'SubFamily', args.subtype)
-font.appendSFNTName('English (US)', 'UniqueID', args.unique)
-font.appendSFNTName('English (US)', 'Fullname', args.name)
-font.appendSFNTName('English (US)', 'PostScriptName', args.name)
-font.appendSFNTName('English (US)', 'Descriptor', args.name + '-' + args.subtype)
-font.appendSFNTName('English (US)', 'Compatible Full', args.subtype)
-font.appendSFNTName('English (US)', 'CID findfont Name', args.name)
-
-font.os2_fstype = 0
+if 'ttf' in args.formats:
+  args.formats.remove('ttf')
+  ttf = True
 
 for format in args.formats:
+  font.em = 1000
   font.generate(args.destination + '/' + args.name + '.' + format)
+
+if ttf:
+  # from https://gitorious.org/suruma/suruma/blobs/master/generate.py
+  font.em = 2048
+  font.round()
+
+  font.sfnt_names = ()
+  font.appendSFNTName('English (US)', 'Family', args.family)
+  font.appendSFNTName('English (US)', 'SubFamily', args.subtype)
+  font.appendSFNTName('English (US)', 'UniqueID', args.unique)
+  font.appendSFNTName('English (US)', 'Fullname', args.family + args.subtype)
+  font.appendSFNTName('English (US)', 'PostScriptName', args.family)
+  font.appendSFNTName('English (US)', 'Descriptor', args.family + args.subtype)
+  font.appendSFNTName('English (US)', 'Compatible Full', args.family + args.subtype)
+  font.appendSFNTName('English (US)', 'CID findfont Name', args.name)
+  font.os2_fstype = 0
+  font.generate(args.destination + '/' + args.name + '.' + 'ttf')
+
